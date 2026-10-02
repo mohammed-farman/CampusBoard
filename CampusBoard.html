@@ -1,0 +1,4533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusBoard — Student OS</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: skyblue;
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      color: #0B1F3A;
+    }
+
+    /* ================= HEADER ================= */
+
+    .header {
+      background-color: #0B1F3A;
+      padding: 16px 15px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .header-inner {
+      width: 100%;
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    /* ================= LOGO ================= */
+
+    .logo {
+      font-weight: 700;
+      font-size: 34px;
+      margin: 0;
+      color: white;
+      white-space: nowrap;
+    }
+
+    .C,
+    .B {
+      color: skyblue;
+    }
+
+    /* ================= NAVIGATION ================= */
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 12px;
+      border-radius: 12px;
+      transition: 0.2s ease;
+      white-space: nowrap;
+    }
+
+    nav a:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    /* ================= DASHBOARD ================= */
+
+    .dashboard {
+      width: 100%;
+      max-width: 1100px;
+      margin: 35px auto;
+      padding: 0 18px;
+    }
+
+    /* ================= CARDS ================= */
+
+    .card1,
+    .focura-card {
+      position: relative;
+      width: 100%;
+      padding: 24px;
+      background: rgba(255, 255, 255, 0.30);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.58);
+      box-shadow:
+        0 12px 34px rgba(11, 31, 58, 0.14),
+        inset 0 1px 1px rgba(255, 255, 255, 0.45);
+      transition: 0.25s ease;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .card1:hover,
+    .focura-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .focura-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ================= SECTIONS ================= */
+
+    .page-section {
+      margin-bottom: 26px;
+      scroll-margin-top: 105px;
+    }
+
+    .section-heading {
+      color: #0B1F3A;
+      font-size: clamp(27px, 4vw, 34px);
+      font-weight: 800;
+      letter-spacing: -.5px;
+      margin: 0 0 7px;
+    }
+
+    .section-subtitle {
+      color: rgba(11,31,58,.68);
+      font-size: 14px;
+      margin: 0 0 18px;
+    }
+
+    .section-title {
+      font-weight: 700;
+      color: #0B1F3A;
+      font-size: 23px;
+      text-align: left;
+      margin-bottom: 18px;
+    }
+
+    .dashboard-clock-card {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      margin-bottom:18px;
+    }
+
+    .dashboard-clock-label {
+      font-size:12px;
+      font-weight:700;
+      opacity:.65;
+      text-transform:uppercase;
+      letter-spacing:.6px;
+    }
+
+    .dashboard-clock {
+      font-size:clamp(28px,5vw,42px);
+      font-weight:900;
+      line-height:1.05;
+      margin-top:4px;
+    }
+
+    .dashboard-clock-date {
+      margin-top:6px;
+      font-size:13px;
+      opacity:.68;
+    }
+
+    .dashboard-clock-icon {
+      width:58px;
+      height:58px;
+      display:grid;
+      place-items:center;
+      border-radius:18px;
+      background:rgba(56,189,248,.18);
+      font-size:27px;
+    }
+
+    /* ================= DASHBOARD CARDS ================= */
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .dashboard-card {
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 24px;
+    }
+
+    .dashboard-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: rgba(56,189,248,.18);
+      border: 1px solid rgba(255,255,255,.55);
+      font-size: 24px;
+      margin-bottom: 14px;
+    }
+
+    .dashboard-card h3 {
+      margin: 0 0 7px;
+      font-size: 20px;
+    }
+
+    .dashboard-card p {
+      margin: 0 0 18px;
+      color: rgba(11,31,58,.68);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .dashboard-card .btn {
+      margin-top: auto;
+    }
+
+    /* ================= BUTTONS ================= */
+
+    .btn,
+    .icon-btn {
+      border: 1px solid rgba(255,255,255,.55);
+      border-radius: 13px;
+      padding: 10px 15px;
+      background: rgba(255,255,255,.34);
+      color: #0B1F3A;
+      font-weight: 700;
+      transition: .2s ease;
+      box-shadow: inset 0 1px rgba(255,255,255,.35);
+      font-family: inherit;
+    }
+
+    .btn:hover,
+    .icon-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,.50);
+    }
+
+    .btn.primary {
+      background: #0B1F3A;
+      color: white;
+      border-color: #0B1F3A;
+    }
+
+    .btn.danger {
+      background: #dc2626;
+      color: white;
+      border-color: #dc2626;
+    }
+
+    /* ================= INPUTS ================= */
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .input,
+    .select {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.60);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,.30);
+      color: #0B1F3A;
+      outline: none;
+      box-shadow: inset 0 1px rgba(255,255,255,.28);
+    }
+
+    .input:focus,
+    .select:focus {
+      border-color: rgba(11,31,58,.45);
+      background: rgba(255,255,255,.44);
+      box-shadow: 0 0 0 3px rgba(56,189,248,.20);
+    }
+
+    .input::placeholder {
+      color: rgba(11,31,58,.68);
+    }
+
+    /* =====================================================
+       TASKS
+       ===================================================== */
+
+    .task-add {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) 150px 150px 52px;
+      gap: 10px;
+      align-items: stretch;
+      margin-bottom: 16px;
+    }
+
+    .task-add .add-btn {
+      min-width: 52px;
+      padding: 0;
+      font-size: 22px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) 170px 170px;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .filter-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+      padding: 5px;
+    }
+
+    .filter-row .btn {
+      padding: 9px 13px;
+    }
+
+    .filter-row .active {
+      background: #0B1F3A;
+      color: white;
+    }
+
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .task {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 15px;
+      border: 1px solid rgba(255,255,255,.58);
+      border-radius: 20px;
+      background: rgba(255,255,255,.24);
+      box-shadow: inset 0 1px rgba(255,255,255,.30);
+      animation: appear .25s ease;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .check {
+      width: 20px;
+      height: 20px;
+      accent-color: #0284C7;
+    }
+
+    .task-main {
+      min-width: 0;
+    }
+
+    .task-text {
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    .task.done .task-text {
+      text-decoration: line-through;
+      opacity: .5;
+    }
+
+    .meta {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-top: 7px;
+    }
+
+    .badge {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 99px;
+      font-weight: 700;
+      background: rgba(56,189,248,.18);
+      color: #0B1F3A;
+    }
+
+    .badge.high {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge.medium {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge.low {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge.overdue {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .task-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .small {
+      padding: 8px 10px;
+      border-radius: 11px;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 30px;
+      color: rgba(11,31,58,.68);
+      font-weight: 600;
+    }
+
+    /* =====================================================
+       ASSIGNMENTS
+       ===================================================== */
+
+    .assignment-add {
+      display: grid;
+      grid-template-columns: 160px minmax(0,1fr) 150px 150px 52px;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .assignment-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .assignment {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 17px;
+      border-radius: 21px;
+      background: rgba(255,255,255,.24);
+      border: 1px solid rgba(255,255,255,.58);
+      box-shadow: inset 0 1px rgba(255,255,255,.30);
+      animation: appear .25s ease;
+    }
+
+    .assignment-check {
+      width: 21px;
+      height: 21px;
+      accent-color: #0284C7;
+    }
+
+    .assignment-main {
+      min-width: 0;
+    }
+
+    .assignment-title {
+      font-size: 17px;
+      font-weight: 800;
+      word-break: break-word;
+    }
+
+    .assignment.done .assignment-title {
+      text-decoration: line-through;
+      opacity: .5;
+    }
+
+    .assignment-subject {
+      margin-top: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: .68;
+    }
+
+    .assignment-meta {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-top: 9px;
+    }
+
+    .assignment-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .focus-assignment {
+      background: #0B1F3A;
+      color: white;
+      border-color: #0B1F3A;
+    }
+
+    .assignment-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .assignment-stat {
+      text-align: center;
+      padding: 15px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.22);
+      border: 1px solid rgba(255,255,255,.45);
+    }
+
+    .assignment-stat strong {
+      display: block;
+      font-size: 25px;
+      font-weight: 800;
+    }
+
+    .assignment-stat span {
+      font-size: 11px;
+      font-weight: 700;
+      opacity: .7;
+    }
+
+    /* =====================================================
+       FOCUS TIMER
+       ===================================================== */
+
+    .timer {
+      text-align: center;
+    }
+
+    .timer .section-title {
+      text-align: left;
+    }
+
+    .timer-assignment {
+      display: none;
+      margin: 0 auto 12px;
+      width: fit-content;
+      max-width: 100%;
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: rgba(56,189,248,.18);
+      border: 1px solid rgba(56,189,248,.28);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .timer-mode {
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .timer-display {
+      font-size: clamp(58px, 10vw, 76px);
+      font-weight: 800;
+      letter-spacing: 2px;
+      margin: 10px 0;
+      color: #0B1F3A;
+    }
+
+    .timer-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .timer-buttons .btn {
+      min-width: 100px;
+    }
+
+    /* =====================================================
+       CALENDAR
+       ===================================================== */
+
+    .calendar-card {
+      padding-bottom: 22px;
+    }
+
+    .calendar-box {
+      width: 100%;
+      padding: 16px;
+      background: rgba(255,255,255,.25);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,.62);
+      border-radius: 22px;
+      box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.45),
+        0 8px 24px rgba(11,31,58,.08);
+    }
+
+    .calendar-head {
+      display: grid;
+      grid-template-columns: 42px 1fr 42px;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .calendar-head strong {
+      text-align: center;
+      color: #0B1F3A;
+      font-size: 16px;
+    }
+
+    .calendar-head .icon-btn {
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0,1fr));
+      gap: 7px;
+    }
+
+    .day {
+      min-height: 58px;
+      padding: 8px;
+      border-radius: 13px;
+      background: rgba(255,255,255,.24);
+      border: 1px solid rgba(255,255,255,.40);
+      color: #0B1F3A;
+      font-size: 12px;
+      transition: .18s ease;
+    }
+
+    .day:hover {
+      background: rgba(255,255,255,.40);
+    }
+
+    .day strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .day.today {
+      outline: 2px solid rgba(11,31,58,.55);
+      background: rgba(135,206,235,.38);
+    }
+
+    .day.has-tasks {
+      background: rgba(56,189,248,.24);
+      border-color: rgba(2,132,199,.28);
+    }
+
+    .day.has-assignments {
+      box-shadow: inset 0 -4px 0 #0B1F3A;
+    }
+
+    .weekdays .day {
+      min-height: auto;
+      padding: 5px 2px;
+      background: transparent;
+      border: 0;
+      font-weight: 800;
+      text-align: center;
+      opacity: .72;
+    }
+
+    /* =====================================================
+       EXAM CALENDAR
+       ===================================================== */
+
+    .exam-add {
+      display: grid;
+      grid-template-columns: 160px minmax(0,1fr) 160px 150px 52px;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .exam-calendar-wrap {
+      width: 100%;
+      padding: 16px;
+      background: rgba(255,255,255,.25);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,.62);
+      border-radius: 22px;
+      box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.45),
+        0 8px 24px rgba(11,31,58,.08);
+    }
+
+    .exam-calendar-head {
+      display: grid;
+      grid-template-columns: 42px 1fr 42px;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .exam-calendar-head strong {
+      text-align: center;
+      color: #0B1F3A;
+      font-size: 16px;
+    }
+
+    .exam-calendar-head .icon-btn {
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    .exam-calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0,1fr));
+      gap: 7px;
+    }
+
+    .exam-day {
+      min-height: 68px;
+      padding: 8px;
+      border-radius: 13px;
+      background: rgba(255,255,255,.24);
+      border: 1px solid rgba(255,255,255,.40);
+      color: #0B1F3A;
+      font-size: 12px;
+      transition: .18s ease;
+    }
+
+    .exam-day:hover {
+      background: rgba(255,255,255,.40);
+    }
+
+    .exam-day strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .exam-day.today {
+      outline: 2px solid rgba(11,31,58,.55);
+      background: rgba(135,206,235,.38);
+    }
+
+    .exam-day.has-exam {
+      background: rgba(11,31,58,.12);
+      border-color: rgba(11,31,58,.30);
+    }
+
+    .exam-dot {
+      display: block;
+      margin-top: 3px;
+      padding: 3px 5px;
+      border-radius: 7px;
+      background: #0B1F3A;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .exam-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .exam-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.24);
+      border: 1px solid rgba(255,255,255,.58);
+      box-shadow: inset 0 1px rgba(255,255,255,.30);
+    }
+
+    .exam-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: rgba(56,189,248,.18);
+      border: 1px solid rgba(255,255,255,.55);
+      font-size: 20px;
+    }
+
+    .exam-title {
+      font-weight: 800;
+    }
+
+    .exam-subject {
+      font-size: 12px;
+      opacity: .68;
+      margin-top: 3px;
+    }
+
+    .exam-meta {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-top: 7px;
+    }
+
+    /* ================= EXAM FOCUS BUTTON ================= */
+
+    .exam-focus-btn {
+      background: #0B1F3A;
+      color: white;
+      border-color: #0B1F3A;
+      white-space: nowrap;
+    }
+
+    .exam-focus-btn:hover {
+      background: #12345f;
+      color: white;
+    }
+
+    .focus-active {
+      box-shadow: 0 0 0 3px rgba(11,31,58,.14);
+    }
+
+    .break-active {
+      background: rgba(255,255,255,.50);
+    }
+
+    @media (max-width: 900px) {
+      .exam-add {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .exam-add .exam-add-btn {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .exam-add {
+        grid-template-columns: 1fr;
+      }
+
+      .exam-add .exam-add-btn {
+        grid-column: auto;
+        min-height: 46px;
+      }
+
+      .exam-calendar-wrap {
+        padding: 11px;
+        border-radius: 19px;
+      }
+
+      .exam-calendar-grid {
+        gap: 5px;
+      }
+
+      .exam-day {
+        min-height: 54px;
+        padding: 6px;
+        border-radius: 11px;
+        font-size: 9px;
+      }
+
+      .exam-calendar-head {
+        grid-template-columns: 38px 1fr 38px;
+        gap: 7px;
+      }
+
+      .exam-item {
+        grid-template-columns: auto minmax(0,1fr);
+      }
+
+      .exam-item .task-actions {
+        grid-column: 2;
+        justify-content: flex-start;
+      }
+    }
+
+    /* =====================================================
+       TIMETABLE
+       ===================================================== */
+
+    .timetable-add {
+      display:grid;
+      grid-template-columns: 150px minmax(0,1fr) 130px 130px 52px;
+      gap:10px;
+      margin-bottom:18px;
+    }
+
+    .timetable-add .timetable-add-btn {
+      min-width:52px;
+      padding:0;
+      font-size:22px;
+    }
+
+    .timetable-box {
+      padding:16px;
+      border-radius:22px;
+      background:rgba(255,255,255,.25);
+      border:1px solid rgba(255,255,255,.58);
+      margin-bottom:16px;
+    }
+
+    .timetable-head {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:12px;
+    }
+
+    .today-timetable, .timetable-list {
+      display:flex;
+      flex-direction:column;
+      gap:9px;
+    }
+
+    .timetable-row {
+      display:grid;
+      grid-template-columns:90px 1fr auto;
+      gap:12px;
+      align-items:center;
+      padding:12px 14px;
+      border-radius:16px;
+      background:rgba(255,255,255,.25);
+      border:1px solid rgba(255,255,255,.5);
+    }
+
+    .timetable-time {
+      font-size:12px;
+      font-weight:800;
+      opacity:.7;
+    }
+
+    .timetable-subject {
+      font-weight:800;
+    }
+
+    .timetable-day {
+      font-size:11px;
+      opacity:.65;
+      margin-top:2px;
+    }
+
+    .timetable-actions {
+      display:flex;
+      gap:5px;
+    }
+
+    /* =====================================================
+       FOCUS STATS
+       ===================================================== */
+
+    .focus-stats {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+      max-width:460px;
+      margin:0 auto 18px;
+    }
+
+    .focus-stat {
+      padding:11px;
+      border-radius:16px;
+      background:rgba(255,255,255,.22);
+      border:1px solid rgba(255,255,255,.45);
+      text-align:center;
+    }
+
+    .focus-stat strong {
+      display:block;
+      font-size:20px;
+    }
+
+    .focus-stat span {
+      font-size:11px;
+      opacity:.65;
+    }
+
+    /* =====================================================
+       RESOURCES
+       ===================================================== */
+
+    .resource-add {
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) 52px;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .resource-add .resource-add-btn {
+      min-width:52px;
+      padding:0;
+      font-size:22px;
+    }
+
+    .resource-list {
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .resource-item {
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      gap:12px;
+      align-items:center;
+      padding:14px;
+      border-radius:18px;
+      background:rgba(255,255,255,.24);
+      border:1px solid rgba(255,255,255,.58);
+    }
+
+    .resource-icon {
+      width:42px;
+      height:42px;
+      display:grid;
+      place-items:center;
+      border-radius:13px;
+      background:rgba(56,189,248,.18);
+      font-size:19px;
+    }
+
+    .resource-label {
+      font-weight:800;
+      word-break:break-word;
+    }
+
+    .resource-link {
+      display:inline-block;
+      margin-top:4px;
+      font-size:12px;
+      color:#075985;
+      text-decoration:none;
+      word-break:break-all;
+    }
+
+    .resource-link:hover { text-decoration:underline; }
+
+    /* =====================================================
+       SETTINGS
+       ===================================================== */
+
+    .settings {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 10px 0 25px;
+      font-size: 13px;
+      opacity: .65;
+    }
+
+    /* =====================================================
+       PERSONALIZATION OVERLAY
+       ===================================================== */
+
+    .setup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11,31,58,.35);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 9999;
+    }
+
+    .setup-card {
+      width: 100%;
+      max-width: 480px;
+      padding: 35px 25px;
+      position: relative;
+      text-align: center;
+      background: rgba(255,255,255,.32);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,.5);
+      border-radius: 30px;
+      box-shadow: 0 20px 60px rgba(11,31,58,.25);
+    }
+
+    .close-setup {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255,255,255,.3);
+      color: #0B1F3A;
+      font-size: 17px;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .close-setup:hover {
+      background: rgba(255,255,255,.55);
+      transform: rotate(5deg);
+    }
+
+    .setup-icon {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    .setup-card h2 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    .setup-card p {
+      margin: 8px 0 24px;
+      opacity: .7;
+      font-size: 14px;
+    }
+
+    .setup-card input {
+      width: 100%;
+      padding: 14px 15px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255,255,255,.5);
+      border-radius: 15px;
+      background: rgba(255,255,255,.3);
+      color: #0B1F3A;
+      outline: none;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .good-button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 15px;
+      background: #0B1F3A;
+      color: white;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .personalized-greeting {
+      display: none;
+      text-align: center;
+    }
+
+    .personalized-greeting h2 {
+      margin: 0;
+      font-size: 27px;
+    }
+
+    .personalized-greeting p {
+      margin-top: 7px;
+      opacity: .7;
+    }
+
+    /* =====================================================
+       RESPONSIVE
+       ===================================================== */
+
+    @media (max-width: 900px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .assignment-add {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .timetable-add {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .timetable-add .timetable-add-btn {
+        grid-column: 1 / -1;
+      }
+
+      .resource-add {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .resource-add .resource-add-btn {
+        grid-column: 1 / -1;
+      }
+
+      .assignment-add .assignment-add-btn {
+        grid-column: 1 / -1;
+      }
+
+      .task-add {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .task-add .add-btn {
+        grid-column: 1 / -1;
+      }
+
+      .controls {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .controls .search {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .header {
+        padding: 14px 12px;
+      }
+
+      .header-inner {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .logo {
+        font-size: 32px;
+      }
+
+      nav {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+      }
+
+      nav a {
+        padding: 8px 2px;
+        font-size: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        border-radius: 10px;
+      }
+
+      nav a span {
+        font-size: 18px;
+      }
+
+      .dashboard {
+        margin: 25px auto;
+        padding: 0 12px;
+      }
+
+      .focura-card,
+      .card1 {
+        padding: 18px;
+        border-radius: 24px;
+      }
+
+      .page-section {
+        scroll-margin-top: 145px;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .assignment-stats {
+        gap: 8px;
+      }
+
+      .assignment-stat {
+        padding: 12px 6px;
+      }
+
+      .assignment-stat strong {
+        font-size: 21px;
+      }
+
+      .assignment {
+        grid-template-columns: auto minmax(0,1fr);
+      }
+
+      .assignment-actions {
+        grid-column: 2;
+        justify-content: flex-start;
+      }
+
+      .calendar-box {
+        padding: 11px;
+        border-radius: 19px;
+      }
+
+      .calendar-grid {
+        gap: 5px;
+      }
+
+      .day {
+        min-height: 50px;
+        padding: 6px;
+        border-radius: 11px;
+        font-size: 10px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .logo {
+        font-size: 29px;
+      }
+
+      nav {
+        gap: 2px;
+      }
+
+      nav a {
+        font-size: 9px;
+        padding: 7px 1px;
+      }
+
+      nav a span {
+        font-size: 17px;
+      }
+
+      .task-add,
+      .controls,
+      .assignment-add,
+      .timetable-add,
+      .resource-add {
+        grid-template-columns: 1fr;
+      }
+
+      .task-add .add-btn,
+      .assignment-add .assignment-add-btn,
+      .timetable-add .timetable-add-btn,
+      .resource-add .resource-add-btn,
+      .controls .search {
+        grid-column: auto;
+      }
+
+      .assignment-add .assignment-add-btn,
+      .timetable-add .timetable-add-btn,
+      .resource-add .resource-add-btn {
+        min-height: 46px;
+      }
+
+      .assignment-stats {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .calendar-head {
+        grid-template-columns: 38px 1fr 38px;
+        gap: 7px;
+      }
+
+      .day {
+        min-height: 46px;
+        font-size: 9px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+
+  <header class="header">
+    <div class="header-inner">
+
+      <h1 class="logo">
+        <span class="C">C</span>ampus<span class="B">B</span>oard
+      </h1>
+
+      <nav>
+        <a href="#home"><span>🏠</span>Home</a>
+        <a href="#classes"><span>📅</span>Timetable</a>
+        <a href="#tasks"><span>📝</span>Tasks</a>
+        <a href="#assignments"><span>📚</span>Assignments</a>
+        <a href="#exams"><span>🧪</span>Exams</a>
+        <a href="#focus"><span>🎯</span>Focus</a>
+        <a href="#resources"><span>📖</span>Resources</a>
+      </nav>
+
+    </div>
+  </header>
+
+
+  <main class="dashboard">
+
+    <!-- ================= HOME ================= -->
+
+    <section id="home" class="page-section">
+
+      <h2 class="section-heading">Dashboard</h2>
+
+      <p class="section-subtitle">
+        Your school life + your focus system, together in one place.
+      </p>
+
+      <div class="card1" style="margin-bottom:18px;">
+
+        <div class="personalized-greeting" id="personalizedGreeting">
+
+          <h2 id="greetingText">
+            Welcome to CampusBoard 👋
+          </h2>
+
+          <p>
+            Your school life, organised in one place.
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="card1 dashboard-clock-card">
+        <div>
+          <div class="dashboard-clock-label">CampusBoard Time</div>
+          <div class="dashboard-clock" id="dashboardClock">--:--:--</div>
+          <div class="dashboard-clock-date" id="dashboardClockDate"></div>
+        </div>
+        <div class="dashboard-clock-icon">🕒</div>
+      </div>
+
+
+      <div class="dashboard-grid">
+
+        <div class="card1 dashboard-card">
+
+          <div class="dashboard-icon">📝</div>
+
+          <h3>Tasks</h3>
+
+          <p>
+            Keep homework, study work and personal tasks organised.
+          </p>
+
+          <button
+            class="btn primary"
+            onclick="document.getElementById('tasks').scrollIntoView({behavior:'smooth'})">
+            Open Tasks →
+          </button>
+
+        </div>
+
+
+        <div class="card1 dashboard-card">
+
+          <div class="dashboard-icon">📚</div>
+
+          <h3>Assignments</h3>
+
+          <p>
+            Track school assignments, deadlines and focused study sessions.
+          </p>
+
+          <button
+            class="btn"
+            onclick="document.getElementById('assignments').scrollIntoView({behavior:'smooth'})">
+            Open Assignments →
+          </button>
+
+        </div>
+
+
+        <div class="card1 dashboard-card">
+
+          <div class="dashboard-icon">⏱️</div>
+
+          <h3>Study Focus</h3>
+
+          <p>
+            Start a focused study session for your current assignment.
+          </p>
+
+          <button
+            class="btn"
+            onclick="document.getElementById('focus').scrollIntoView({behavior:'smooth'})">
+            Start Focus →
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= CLASSES ================= -->
+
+    <section id="classes" class="page-section">
+
+      <div class="focura-card">
+
+        <h2 class="section-title">📅 Class Timetable</h2>
+
+        <p class="section-subtitle" style="margin-bottom:18px;">
+          Know your timetable. Set up your books according to it and get ready for the next class.
+        </p>
+
+        <div class="timetable-add">
+          <select class="select" id="timetableDay">
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+          </select>
+
+          <input class="input" id="timetableSubject" placeholder="📖 Subject" maxlength="40">
+          <input class="input" id="timetableStart" type="time" aria-label="Class start time">
+          <input class="input" id="timetableEnd" type="time" aria-label="Class end time">
+          <button class="btn primary timetable-add-btn" id="timetableAddBtn">+</button>
+        </div>
+
+        <div class="timetable-box">
+          <div class="timetable-head">
+            <strong id="todayTimetableTitle">Today</strong>
+            <span class="badge" id="currentTimeSmall"></span>
+          </div>
+          <div id="todayTimetable" class="today-timetable"></div>
+        </div>
+
+        <div id="timetableList" class="timetable-list"></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= TASKS ================= -->
+
+    <section id="tasks" class="page-section">
+
+      <div class="focura-card">
+
+        <h2 class="section-title">
+          📝 Tasks
+        </h2>
+
+
+        <div class="task-add">
+
+          <input
+            class="input"
+            id="taskInput"
+            placeholder="Add a new task..."
+            maxlength="120"
+          >
+
+          <select class="select" id="priority">
+
+            <option value="medium">
+              🟡 Medium
+            </option>
+
+            <option value="high">
+              🔴 High
+            </option>
+
+            <option value="low">
+              🟢 Low
+            </option>
+
+          </select>
+
+          <input
+            class="input"
+            id="dueDate"
+            type="date"
+            aria-label="Due date"
+          >
+
+          <button
+            class="btn primary add-btn"
+            id="addBtn"
+            title="Add task">
+            +
+          </button>
+
+        </div>
+
+
+        <div class="controls">
+
+          <input
+            class="input search"
+            id="search"
+            placeholder="🔍 Search tasks..."
+          >
+
+          <select class="select" id="categoryFilter">
+
+            <option value="all">
+              All categories
+            </option>
+
+            <option>Study</option>
+            <option>Coding</option>
+            <option>Homework</option>
+            <option>Fitness</option>
+            <option>Personal</option>
+
+          </select>
+
+
+          <select class="select" id="sort">
+
+            <option value="newest">
+              Newest first
+            </option>
+
+            <option value="oldest">
+              Oldest first
+            </option>
+
+            <option value="priority">
+              Priority
+            </option>
+
+            <option value="due">
+              Due date
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="filter-row">
+
+          <button class="btn active" data-list-filter="all">
+            All
+          </button>
+
+          <button class="btn" data-list-filter="pending">
+            Pending
+          </button>
+
+          <button class="btn" data-list-filter="completed">
+            Completed
+          </button>
+
+        </div>
+
+
+        <div id="taskList" class="task-list"></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ASSIGNMENTS
+         ===================================================== -->
+
+    <section id="assignments" class="page-section">
+
+      <div class="focura-card">
+
+        <h2 class="section-title">
+          📚 Assignments
+        </h2>
+
+        <p style="margin:0 0 18px;opacity:.7;font-size:14px;">
+          Track school assignments and jump directly into a focused study session.
+        </p>
+
+
+        <!-- Assignment statistics -->
+
+        <div class="assignment-stats">
+
+          <div class="assignment-stat">
+            <strong id="assignmentTotal">0</strong>
+            <span>Total</span>
+          </div>
+
+          <div class="assignment-stat">
+            <strong id="assignmentPending">0</strong>
+            <span>Pending</span>
+          </div>
+
+          <div class="assignment-stat">
+            <strong id="assignmentCompleted">0</strong>
+            <span>Completed</span>
+          </div>
+
+        </div>
+
+
+        <!-- Add assignment -->
+
+        <div class="assignment-add">
+
+          <input
+            class="input"
+            id="assignmentSubject"
+            placeholder="📖 Subject"
+            maxlength="40"
+          >
+
+          <input
+            class="input"
+            id="assignmentTitle"
+            placeholder="📝 Assignment title..."
+            maxlength="120"
+          >
+
+          <input
+            class="input"
+            id="assignmentDue"
+            type="date"
+            aria-label="Assignment due date"
+          >
+
+          <select
+            class="select"
+            id="assignmentPriority">
+
+            <option value="medium">
+              🟡 Medium
+            </option>
+
+            <option value="high">
+              🔴 High
+            </option>
+
+            <option value="low">
+              🟢 Low
+            </option>
+
+          </select>
+
+          <button
+            class="btn primary assignment-add-btn"
+            id="assignmentAddBtn"
+            title="Add assignment">
+            +
+          </button>
+
+        </div>
+
+
+        <div
+          id="assignmentList"
+          class="assignment-list">
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= EXAMS ================= -->
+
+    <section id="exams" class="page-section">
+
+      <div class="focura-card">
+
+        <h2 class="section-title">
+          🧪 Exam Calendar
+        </h2>
+
+        <p style="margin:0 0 18px;opacity:.7;font-size:14px;">
+          Add your exams and keep the whole exam schedule inside one compact calendar box.
+        </p>
+
+        <div class="exam-add">
+
+          <input
+            class="input"
+            id="examTitle"
+            placeholder="🧪 Exam / Subject"
+            maxlength="80"
+          >
+
+          <input
+            class="input"
+            id="examDate"
+            type="date"
+            aria-label="Exam date"
+          >
+
+          <input
+            class="input"
+            id="examTime"
+            type="time"
+            aria-label="Exam time"
+          >
+
+          <button
+            class="btn primary exam-add-btn"
+            id="examAddBtn"
+            title="Add exam">
+            +
+          </button>
+
+        </div>
+
+        <div class="exam-calendar-wrap">
+
+          <div class="exam-calendar-head">
+
+            <button
+              class="icon-btn"
+              id="prevExamMonth"
+              aria-label="Previous month">
+              ←
+            </button>
+
+            <strong id="examMonthTitle"></strong>
+
+            <button
+              class="icon-btn"
+              id="nextExamMonth"
+              aria-label="Next month">
+              →
+            </button>
+
+          </div>
+
+          <div class="exam-calendar-grid weekdays">
+            <div class="day">Sun</div>
+            <div class="day">Mon</div>
+            <div class="day">Tue</div>
+            <div class="day">Wed</div>
+            <div class="day">Thu</div>
+            <div class="day">Fri</div>
+            <div class="day">Sat</div>
+          </div>
+
+          <div
+            class="exam-calendar-grid"
+            id="examCalendar">
+          </div>
+
+        </div>
+
+        <div id="examList" class="exam-list"></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOCUS
+         ===================================================== -->
+
+    <section id="focus" class="page-section">
+
+      <div class="focura-card timer">
+
+        <h2 class="section-title">
+          ⏱️ Study Focus
+        </h2>
+
+
+        <!-- Selected assignment appears here -->
+
+        <div
+          class="timer-assignment"
+          id="timerAssignment">
+        </div>
+
+        <div class="focus-stats">
+          <div class="focus-stat">
+            <strong id="focusSessionsUsed">0</strong>
+            <span>Sessions used</span>
+          </div>
+          <div class="focus-stat">
+            <strong id="focusSessionsCompleted">0</strong>
+            <span>Sessions completed</span>
+          </div>
+        </div>
+
+
+        <div
+          class="timer-mode"
+          id="timerMode">
+          Focus Session
+        </div>
+
+
+        <div
+          class="timer-display"
+          id="timerDisplay">
+          00:00:00
+        </div>
+
+
+        <div class="timer-buttons">
+
+          <button
+            class="btn primary"
+            id="timerStart">
+            ▶ Start
+          </button>
+
+          <button
+            class="btn"
+            id="timerReset">
+            ↻ Reset
+          </button>
+
+          <button
+            class="btn"
+            id="timerModeBtn">
+            ☕ Break
+          </button>
+
+        </div>
+
+
+        <p
+          style="margin-top:14px;font-size:13px;color:rgba(11,31,58,.68)">
+          Focus starts at 00:00:00 and counts your study time. Take a 5-minute break anytime; when it ends, Focus starts automatically. You can stop whenever you want and keep the exact time you reached.
+        </p>
+
+      </div>
+
+
+      <!-- ================= CALENDAR ================= -->
+
+      <div class="focura-card calendar-card">
+
+        <h2 class="section-title">
+          📆 School Calendar
+        </h2>
+
+        <div class="calendar-box">
+
+          <div class="calendar-head">
+
+            <button
+              class="icon-btn"
+              id="prevMonth"
+              aria-label="Previous month">
+              ←
+            </button>
+
+            <strong id="monthTitle"></strong>
+
+            <button
+              class="icon-btn"
+              id="nextMonth"
+              aria-label="Next month">
+              →
+            </button>
+
+          </div>
+
+
+          <div class="calendar-grid weekdays">
+
+            <div class="day">Sun</div>
+            <div class="day">Mon</div>
+            <div class="day">Tue</div>
+            <div class="day">Wed</div>
+            <div class="day">Thu</div>
+            <div class="day">Fri</div>
+            <div class="day">Sat</div>
+
+          </div>
+
+
+          <div
+            class="calendar-grid"
+            id="calendar">
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= RESOURCES ================= -->
+
+    <section id="resources" class="page-section">
+
+      <div class="focura-card">
+
+        <h2 class="section-title">📖 Resources</h2>
+
+        <p style="margin:0 0 18px;opacity:.7;font-size:14px;">
+          Save useful class and lecture links with a label so you can find them quickly.
+        </p>
+
+        <div class="resource-add">
+          <input class="input" id="resourceLabel" placeholder="🏷️ Label (e.g. Physics — Motion lecture)" maxlength="80">
+          <input class="input" id="resourceUrl" type="url" placeholder="🔗 Paste resource link...">
+          <button class="btn primary resource-add-btn" id="resourceAddBtn">+</button>
+        </div>
+
+        <div id="resourceList" class="resource-list"></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= SETTINGS ================= -->
+
+    <section class="page-section">
+
+      <div class="focura-card">
+
+        <h2 class="section-title">
+          ⚙️ Settings
+        </h2>
+
+        <div class="settings">
+
+          <button
+            class="btn"
+            id="clearDoneBtn">
+            🧹 Clear Completed Tasks
+          </button>
+
+          <button
+            class="btn"
+            id="clearAssignmentsBtn">
+            🧹 Clear Completed Assignments
+          </button>
+
+          <button
+            class="btn"
+            id="exportBtn">
+            📤 Export Tasks
+          </button>
+
+          <button
+            class="btn"
+            id="importBtn">
+            📥 Import Tasks
+          </button>
+
+          <input
+            type="file"
+            id="fileInput"
+            accept=".json"
+            hidden
+          >
+
+          <button
+            class="btn danger"
+            id="deleteAllBtn">
+            🗑️ Delete All Tasks
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       PERSONALIZATION
+       ===================================================== -->
+
+  <div
+    class="setup-overlay"
+    id="setupOverlay">
+
+    <div class="setup-card">
+
+      <button
+        class="close-setup"
+        onclick="closeSetup()"
+        aria-label="Close">
+        ✕
+      </button>
+
+      <div class="setup-icon">
+        🎓
+      </div>
+
+      <h2>
+        Welcome to CampusBoard 👋
+      </h2>
+
+      <p>
+        Let's personalize your experience.
+      </p>
+
+      <input
+        type="text"
+        id="userName"
+        placeholder="👤 Enter your name"
+        autocomplete="name"
+      >
+
+      <button
+        class="good-button"
+        onclick="saveUser()">
+        🚀 Good to go!
+      </button>
+
+    </div>
+
+  </div>
+
+<script>
+/* =====================================================
+       PERSONALIZATION
+       ===================================================== */
+
+    const setupOverlay =
+      document.getElementById("setupOverlay");
+
+    const greetingText =
+      document.getElementById("greetingText");
+
+    const personalizedGreeting =
+      document.getElementById("personalizedGreeting");
+
+
+    const quotes = [
+
+      "Small steps every day lead to big results. 🌱",
+
+      "Stay consistent. Your future self will thank you. 🚀",
+
+      "Keep learning, keep building, keep going. 💻",
+
+      "Progress doesn't have to be perfect. Just keep moving. 🔥",
+
+      "One day at a time. You've got this. 💪"
+
+    ];
+
+
+    function saveUser() {
+
+      const name =
+        document.getElementById("userName").value.trim();
+
+      if (!name) {
+
+        alert("Please enter your name 👤");
+
+        document.getElementById("userName").focus();
+
+        return;
+      }
+
+
+      const loginCount =
+        Number(
+          localStorage.getItem("campusBoardLoginCount")
+        ) || 0;
+
+
+      localStorage.setItem(
+        "campusBoardName",
+        name
+      );
+
+      localStorage.setItem(
+        "campusBoardSetupDone",
+        "true"
+      );
+
+
+      const newLoginCount =
+        loginCount + 1;
+
+
+      localStorage.setItem(
+        "campusBoardLoginCount",
+        newLoginCount
+      );
+
+
+      if (newLoginCount === 1)
+        showFirstWelcome(name);
+      else
+        showReturningWelcome(name);
+
+
+      closeSetup();
+
+    }
+
+
+    function showFirstWelcome(name) {
+
+      greetingText.textContent =
+        `Welcome to CampusBoard for the first time, ${name}! 👋`;
+
+      personalizedGreeting.querySelector("p").textContent =
+        "Enjoy the features and stay consistent. 🚀";
+
+      personalizedGreeting.style.display =
+        "block";
+
+    }
+
+
+    function showReturningWelcome(name) {
+
+      const randomQuote =
+        quotes[
+          Math.floor(
+            Math.random() * quotes.length
+          )
+        ];
+
+
+      greetingText.textContent =
+        `Welcome back, ${name}! 👋`;
+
+      personalizedGreeting.querySelector("p").textContent =
+        randomQuote;
+
+      personalizedGreeting.style.display =
+        "block";
+
+    }
+
+
+    function closeSetup() {
+
+      if (!setupOverlay) return;
+
+      setupOverlay.style.display = "none";
+      setupOverlay.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+
+    }
+
+
+    /* =====================================================
+       MAIN CAMPUSBOARD ENGINE
+       ===================================================== */
+
+    (() => {
+
+      const $ =
+        selector =>
+          document.querySelector(selector);
+
+      const $$ =
+        selector =>
+          [...document.querySelectorAll(selector)];
+
+
+      /* ===================================================
+         TASK SYSTEM
+         =================================================== */
+
+      const TASK_KEY =
+        "focuraTasksV3";
+
+
+      let tasks =
+        JSON.parse(
+          localStorage.getItem(TASK_KEY) || "[]"
+        );
+
+
+      let listFilter =
+        "all";
+
+
+      let calendarDate =
+        new Date();
+
+
+      function saveTasks() {
+
+        localStorage.setItem(
+          TASK_KEY,
+          JSON.stringify(tasks)
+        );
+
+      }
+
+
+      function uid() {
+
+        return Date.now().toString(36) +
+          Math.random().toString(36).slice(2);
+
+      }
+
+
+      function todayStr() {
+
+        const d = new Date();
+
+        const y = d.getFullYear();
+
+        const m =
+          String(d.getMonth() + 1)
+            .padStart(2, "0");
+
+        const day =
+          String(d.getDate())
+            .padStart(2, "0");
+
+        return `${y}-${m}-${day}`;
+
+      }
+
+      /* ===================================================
+         LIVE CLOCK
+         =================================================== */
+
+      function updateClock() {
+        const now = new Date();
+        const time = now.toLocaleTimeString(undefined, {
+          hour: "numeric",
+          minute: "2-digit",
+          second: "2-digit"
+        });
+
+        const clock = $("#dashboardClock");
+        if (clock) clock.textContent = time;
+
+        const small = $("#currentTimeSmall");
+        if (small) small.textContent = time;
+
+        renderTodayTimetable();
+      }
+
+      setInterval(updateClock, 1000);
+
+
+
+      function priorityValue(priority) {
+
+        return priority === "high"
+          ? 3
+          : priority === "medium"
+          ? 2
+          : 1;
+
+      }
+
+
+      function esc(text) {
+
+        const d =
+          document.createElement("div");
+
+        d.textContent =
+          text;
+
+        return d.innerHTML;
+
+      }
+
+
+      function formatDate(date) {
+
+        if (!date)
+          return "";
+
+        const x =
+          new Date(date + "T00:00:00");
+
+        return x.toLocaleDateString(
+          undefined,
+          {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+          }
+        );
+
+      }
+
+
+      function addTask() {
+
+        const input =
+          $("#taskInput");
+
+        const text =
+          input.value.trim();
+
+
+        if (!text) {
+
+          input.focus();
+
+          return;
+
+        }
+
+
+        const due =
+          $("#dueDate").value;
+
+
+        tasks.unshift({
+
+          id: uid(),
+
+          text,
+
+          completed: false,
+
+          priority:
+            $("#priority").value,
+
+          dueDate: due,
+
+          category: "Personal",
+
+          created: Date.now(),
+
+          completedAt: null
+
+        });
+
+
+        input.value = "";
+
+        $("#dueDate").value = "";
+
+
+        saveTasks();
+
+        renderTasks();
+
+        input.focus();
+
+      }
+
+
+      $("#addBtn").onclick =
+        addTask;
+
+
+      $("#taskInput").addEventListener(
+        "keydown",
+        e => {
+
+          if (e.key === "Enter")
+            addTask();
+
+        }
+      );
+
+
+      function getVisibleTasks() {
+
+        let arr =
+          tasks.map(
+            (task, index) =>
+              ({
+                ...task,
+                _i: index
+              })
+          );
+
+
+        if (listFilter === "completed")
+          arr =
+            arr.filter(
+              task => task.completed
+            );
+
+
+        if (listFilter === "pending")
+          arr =
+            arr.filter(
+              task => !task.completed
+            );
+
+
+        const q =
+          $("#search").value
+            .trim()
+            .toLowerCase();
+
+
+        if (q) {
+
+          arr =
+            arr.filter(
+              task =>
+                task.text
+                  .toLowerCase()
+                  .includes(q)
+            );
+
+        }
+
+
+        const cat =
+          $("#categoryFilter").value;
+
+
+        if (cat !== "all") {
+
+          arr =
+            arr.filter(
+              task =>
+                task.category === cat
+            );
+
+        }
+
+
+        const sort =
+          $("#sort").value;
+
+
+        if (sort === "oldest") {
+
+          arr.sort(
+            (a,b) =>
+              a.created - b.created
+          );
+
+        }
+
+        else if (sort === "priority") {
+
+          arr.sort(
+            (a,b) =>
+              priorityValue(b.priority) -
+              priorityValue(a.priority)
+          );
+
+        }
+
+        else if (sort === "due") {
+
+          arr.sort(
+            (a,b) =>
+              (a.dueDate || "9999")
+                .localeCompare(
+                  b.dueDate || "9999"
+                )
+          );
+
+        }
+
+        else {
+
+          arr.sort(
+            (a,b) =>
+              b.created - a.created
+          );
+
+        }
+
+
+        return arr;
+
+      }
+
+
+      function renderTasks() {
+
+        const list =
+          $("#taskList");
+
+        const visible =
+          getVisibleTasks();
+
+
+        list.innerHTML = "";
+
+
+        if (!visible.length) {
+
+          list.innerHTML =
+            '<div class="empty">✨ No tasks match this view.</div>';
+
+        }
+
+
+        visible.forEach(task => {
+
+          const el =
+            document.createElement("div");
+
+
+          el.className =
+            "task" +
+            (task.completed
+              ? " done"
+              : "");
+
+
+          const overdue =
+            task.dueDate &&
+            !task.completed &&
+            task.dueDate < todayStr();
+
+
+          el.innerHTML = `
+
+            <input
+              class="check"
+              type="checkbox"
+              ${task.completed ? "checked" : ""}
+              aria-label="Complete task"
+            >
+
+            <div class="task-main">
+
+              <div class="task-text">
+                ${esc(task.text)}
+              </div>
+
+              <div class="meta">
+
+                <span class="badge ${task.priority}">
+                  ${task.priority.toUpperCase()}
+                </span>
+
+                <span class="badge">
+                  ${esc(task.category || "Personal")}
+                </span>
+
+                ${
+                  task.dueDate
+                    ? `
+                      <span class="badge ${overdue ? "overdue" : ""}">
+                        📅 ${formatDate(task.dueDate)}
+                        ${overdue ? " • OVERDUE" : ""}
+                      </span>
+                    `
+                    : ""
+                }
+
+              </div>
+
+            </div>
+
+
+            <div class="task-actions">
+
+              <button
+                class="icon-btn small edit"
+                title="Edit task">
+                ✏️
+              </button>
+
+              <button
+                class="icon-btn small del"
+                title="Delete task">
+                ×
+              </button>
+
+            </div>
+
+          `;
+
+
+          const index =
+            task._i;
+
+
+          el.querySelector(".check")
+            .onchange = e => {
+
+              tasks[index].completed =
+                e.target.checked;
+
+              tasks[index].completedAt =
+                e.target.checked
+                  ? Date.now()
+                  : null;
+
+              saveTasks();
+
+              renderTasks();
+
+            };
+
+
+          el.querySelector(".del")
+            .onclick = () => {
+
+              tasks.splice(index, 1);
+
+              saveTasks();
+
+              renderTasks();
+
+            };
+
+
+          el.querySelector(".edit")
+            .onclick = () => {
+
+              const nt =
+                prompt(
+                  "Edit task:",
+                  tasks[index].text
+                );
+
+
+              if (
+                nt !== null &&
+                nt.trim()
+              ) {
+
+                tasks[index].text =
+                  nt.trim();
+
+                saveTasks();
+
+                renderTasks();
+
+              }
+
+            };
+
+
+          list.appendChild(el);
+
+        });
+
+
+        renderCalendar();
+
+      }
+
+
+      $$("[data-list-filter]")
+        .forEach(button => {
+
+          button.onclick = () => {
+
+            listFilter =
+              button.dataset.listFilter;
+
+
+            $$("[data-list-filter]")
+              .forEach(
+                x =>
+                  x.classList.remove("active")
+              );
+
+
+            button.classList.add("active");
+
+            renderTasks();
+
+          };
+
+        });
+
+
+      ["#search", "#categoryFilter", "#sort"]
+        .forEach(selector => {
+
+          $(selector).addEventListener(
+            "input",
+            renderTasks
+          );
+
+        });
+
+
+      $("#clearDoneBtn").onclick = () => {
+
+        if (
+          confirm(
+            "Delete all completed tasks?"
+          )
+        ) {
+
+          tasks =
+            tasks.filter(
+              task => !task.completed
+            );
+
+          saveTasks();
+
+          renderTasks();
+
+        }
+
+      };
+
+
+      $("#deleteAllBtn").onclick = () => {
+
+        if (
+          tasks.length &&
+          confirm(
+            "Delete ALL tasks? This cannot be undone."
+          )
+        ) {
+
+          tasks = [];
+
+          saveTasks();
+
+          renderTasks();
+
+        }
+
+      };
+
+
+      /* ===================================================
+         TIMETABLE SYSTEM
+         =================================================== */
+
+      const TIMETABLE_KEY = "campusBoardTimetableV1";
+
+      let timetable = JSON.parse(
+        localStorage.getItem(TIMETABLE_KEY) || "[]"
+      );
+
+      const dayOrder = [
+        "Monday", "Tuesday", "Wednesday",
+        "Thursday", "Friday", "Saturday"
+      ];
+
+      function saveTimetable() {
+        localStorage.setItem(TIMETABLE_KEY, JSON.stringify(timetable));
+      }
+
+      function formatTime(time) {
+        if (!time) return "";
+        const [h,m] = time.split(":").map(Number);
+        const d = new Date();
+        d.setHours(h,m,0,0);
+        return d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
+      }
+
+      function todayName() {
+        const names = ["Sunday",...dayOrder];
+        return names[new Date().getDay()];
+      }
+
+      function renderTodayTimetable() {
+        const list = $("#todayTimetable");
+        if (!list) return;
+        const today = todayName();
+        $("#todayTimetableTitle").textContent = today === "Sunday" ? "Today — Sunday" : `Today — ${today}`;
+
+        const items = timetable
+          .filter(x => x.day === today)
+          .sort((a,b) => (a.start || "99:99").localeCompare(b.start || "99:99"));
+
+        list.innerHTML = items.length ? items.map(x => `
+          <div class="timetable-row">
+            <div class="timetable-time">${formatTime(x.start)}${x.end ? ` – ${formatTime(x.end)}` : ""}</div>
+            <div>
+              <div class="timetable-subject">📖 ${esc(x.subject)}</div>
+            </div>
+            <div class="badge">${x.day}</div>
+          </div>
+        `).join("") : '<div class="empty">🌤️ No class added for today.</div>';
+      }
+
+      function renderTimetableList() {
+        const list = $("#timetableList");
+        list.innerHTML = "";
+        const sorted = [...timetable].sort((a,b) => {
+          const day = dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day);
+          return day || (a.start || "99:99").localeCompare(b.start || "99:99");
+        });
+
+        if (!sorted.length) {
+          list.innerHTML = '<div class="empty">📅 Your timetable is empty. Add your classes above.</div>';
+          renderTodayTimetable();
+          return;
+        }
+
+        sorted.forEach(item => {
+          const el = document.createElement("div");
+          el.className = "timetable-row";
+          el.innerHTML = `
+            <div class="timetable-time">${formatTime(item.start)}${item.end ? ` – ${formatTime(item.end)}` : ""}</div>
+            <div>
+              <div class="timetable-subject">📖 ${esc(item.subject)}</div>
+              <div class="timetable-day">${item.day}</div>
+            </div>
+            <div class="timetable-actions">
+              <button class="icon-btn small edit-timetable" title="Edit timetable entry">✏️</button>
+              <button class="icon-btn small del-timetable" title="Delete timetable entry">×</button>
+            </div>
+          `;
+
+          el.querySelector(".del-timetable").onclick = () => {
+            timetable = timetable.filter(x => x.id !== item.id);
+            saveTimetable();
+            renderTimetableList();
+          };
+
+          el.querySelector(".edit-timetable").onclick = () => {
+            const subject = prompt("Edit subject:", item.subject);
+            if (subject !== null && subject.trim()) {
+              item.subject = subject.trim();
+              saveTimetable();
+              renderTimetableList();
+            }
+          };
+
+          list.appendChild(el);
+        });
+        renderTodayTimetable();
+      }
+
+      function addTimetableEntry() {
+        const day = $("#timetableDay").value;
+        const subject = $("#timetableSubject").value.trim();
+        const start = $("#timetableStart").value;
+        const end = $("#timetableEnd").value;
+
+        if (!subject) { alert("Please enter the subject 📖"); $("#timetableSubject").focus(); return; }
+        if (!start) { alert("Please select the class start time ⏰"); $("#timetableStart").focus(); return; }
+        if (end && end <= start) { alert("End time should be after the start time."); $("#timetableEnd").focus(); return; }
+
+        timetable.push({id:uid(), day, subject, start, end, created:Date.now()});
+        saveTimetable();
+        $("#timetableSubject").value = "";
+        $("#timetableStart").value = "";
+        $("#timetableEnd").value = "";
+        renderTimetableList();
+        $("#timetableSubject").focus();
+      }
+
+      $("#timetableAddBtn").onclick = addTimetableEntry;
+      ["#timetableSubject","#timetableStart","#timetableEnd"].forEach(selector => {
+        $(selector).addEventListener("keydown", e => { if (e.key === "Enter") addTimetableEntry(); });
+      });
+
+      /* ===================================================
+         ASSIGNMENT SYSTEM
+         =================================================== */
+
+      const ASSIGNMENT_KEY =
+        "campusBoardAssignmentsV1";
+
+
+      let assignments =
+        JSON.parse(
+          localStorage.getItem(
+            ASSIGNMENT_KEY
+          ) || "[]"
+        );
+
+
+      let selectedAssignmentId =
+        localStorage.getItem(
+          "campusBoardSelectedAssignment"
+        ) || null;
+
+
+      function saveAssignments() {
+
+        localStorage.setItem(
+          ASSIGNMENT_KEY,
+          JSON.stringify(assignments)
+        );
+
+      }
+
+
+      function addAssignment() {
+
+        const subject =
+          $("#assignmentSubject")
+            .value.trim();
+
+        const title =
+          $("#assignmentTitle")
+            .value.trim();
+
+        const due =
+          $("#assignmentDue").value;
+
+        const priority =
+          $("#assignmentPriority").value;
+
+
+        if (!subject) {
+
+          alert(
+            "Please enter the subject 📖"
+          );
+
+          $("#assignmentSubject").focus();
+
+          return;
+
+        }
+
+
+        if (!title) {
+
+          alert(
+            "Please enter the assignment title 📝"
+          );
+
+          $("#assignmentTitle").focus();
+
+          return;
+
+        }
+
+
+        assignments.unshift({
+
+          id: uid(),
+
+          subject,
+
+          title,
+
+          dueDate: due,
+
+          priority,
+
+          completed: false,
+
+          created: Date.now(),
+
+          completedAt: null
+
+        });
+
+
+        $("#assignmentSubject").value =
+          "";
+
+        $("#assignmentTitle").value =
+          "";
+
+        $("#assignmentDue").value =
+          "";
+
+
+        saveAssignments();
+
+        renderAssignments();
+
+      }
+
+
+      $("#assignmentAddBtn")
+        .onclick =
+          addAssignment;
+
+
+      $("#assignmentTitle")
+        .addEventListener(
+          "keydown",
+          e => {
+
+            if (e.key === "Enter")
+              addAssignment();
+
+          }
+        );
+
+
+      function selectAssignment(id) {
+
+        selectedAssignmentId =
+          id;
+
+
+        localStorage.setItem(
+          "campusBoardSelectedAssignment",
+          id
+        );
+
+
+        const assignment =
+          assignments.find(
+            a => a.id === id
+          );
+
+
+        if (!assignment)
+          return;
+
+
+        const display =
+          $("#timerAssignment");
+
+
+        display.textContent =
+          `🎯 ${assignment.subject} — ${assignment.title}`;
+
+
+        display.style.display =
+          "inline-flex";
+
+
+        document
+          .getElementById("focus")
+          .scrollIntoView({
+            behavior: "smooth"
+          });
+
+      }
+
+
+      function renderAssignments() {
+
+        const list =
+          $("#assignmentList");
+
+
+        list.innerHTML = "";
+
+
+        const total =
+          assignments.length;
+
+
+        const completed =
+          assignments.filter(
+            a => a.completed
+          ).length;
+
+
+        const pending =
+          total - completed;
+
+
+        $("#assignmentTotal")
+          .textContent =
+          total;
+
+
+        $("#assignmentPending")
+          .textContent =
+          pending;
+
+
+        $("#assignmentCompleted")
+          .textContent =
+          completed;
+
+
+        if (!assignments.length) {
+
+          list.innerHTML =
+            `
+              <div class="empty">
+                📚 No assignments yet.<br>
+                Add your first school assignment above.
+              </div>
+            `;
+
+          renderCalendar();
+
+          return;
+
+        }
+
+
+        assignments.forEach(
+          assignment => {
+
+            const el =
+              document.createElement("div");
+
+
+            el.className =
+              "assignment" +
+              (
+                assignment.completed
+                  ? " done"
+                  : ""
+              );
+
+
+            const overdue =
+              assignment.dueDate &&
+              !assignment.completed &&
+              assignment.dueDate < todayStr();
+
+
+            el.innerHTML = `
+
+              <input
+                class="assignment-check"
+                type="checkbox"
+                ${assignment.completed ? "checked" : ""}
+                aria-label="Complete assignment"
+              >
+
+
+              <div class="assignment-main">
+
+                <div class="assignment-title">
+                  ${esc(assignment.title)}
+                </div>
+
+                <div class="assignment-subject">
+                  📖 ${esc(assignment.subject)}
+                </div>
+
+
+                <div class="assignment-meta">
+
+                  <span class="badge ${assignment.priority}">
+                    ${assignment.priority.toUpperCase()}
+                  </span>
+
+                  ${
+                    assignment.dueDate
+                      ? `
+                        <span class="badge ${overdue ? "overdue" : ""}">
+                          📅 ${formatDate(assignment.dueDate)}
+                          ${overdue ? " • OVERDUE" : ""}
+                        </span>
+                      `
+                      : ""
+                  }
+
+                  ${
+                    assignment.completed
+                      ? `
+                        <span class="badge low">
+                          ✓ COMPLETED
+                        </span>
+                      `
+                      : ""
+                  }
+
+                </div>
+
+              </div>
+
+
+              <div class="assignment-actions">
+
+                ${
+                  !assignment.completed
+                    ? `
+                      <button
+                        class="btn small focus-assignment">
+                        🎯 Focus
+                      </button>
+                    `
+                    : ""
+                }
+
+                <button
+                  class="icon-btn small edit-assignment"
+                  title="Edit assignment">
+                  ✏️
+                </button>
+
+                <button
+                  class="icon-btn small delete-assignment"
+                  title="Delete assignment">
+                  ×
+                </button>
+
+              </div>
+
+            `;
+
+
+            el.querySelector(
+              ".assignment-check"
+            ).onchange = e => {
+
+              assignment.completed =
+                e.target.checked;
+
+
+              assignment.completedAt =
+                e.target.checked
+                  ? Date.now()
+                  : null;
+
+              if (e.target.checked && selectedAssignmentId === assignment.id) {
+                selectedAssignmentId = null;
+                localStorage.removeItem("campusBoardSelectedAssignment");
+                $("#timerAssignment").style.display = "none";
+              }
+
+              saveAssignments();
+
+              renderAssignments();
+
+            };
+
+
+            const focusButton =
+              el.querySelector(
+                ".focus-assignment"
+              );
+
+
+            if (focusButton) {
+
+              focusButton.onclick =
+                () => {
+
+                  selectAssignment(
+                    assignment.id
+                  );
+
+                };
+
+            }
+
+
+            el.querySelector(
+              ".edit-assignment"
+            ).onclick = () => {
+
+              const newTitle =
+                prompt(
+                  "Edit assignment:",
+                  assignment.title
+                );
+
+
+              if (
+                newTitle !== null &&
+                newTitle.trim()
+              ) {
+
+                assignment.title =
+                  newTitle.trim();
+
+                saveAssignments();
+
+                renderAssignments();
+
+              }
+
+            };
+
+
+            el.querySelector(
+              ".delete-assignment"
+            ).onclick = () => {
+
+              if (
+                confirm(
+                  "Delete this assignment?"
+                )
+              ) {
+
+                assignments =
+                  assignments.filter(
+                    a =>
+                      a.id !==
+                      assignment.id
+                  );
+
+
+                if (
+                  selectedAssignmentId ===
+                  assignment.id
+                ) {
+
+                  selectedAssignmentId =
+                    null;
+
+                  localStorage.removeItem(
+                    "campusBoardSelectedAssignment"
+                  );
+
+                  $("#timerAssignment")
+                    .style.display =
+                    "none";
+
+                }
+
+
+                saveAssignments();
+
+                renderAssignments();
+
+              }
+
+            };
+
+
+            list.appendChild(el);
+
+          }
+        );
+
+
+        renderCalendar();
+
+      }
+
+
+      $("#clearAssignmentsBtn")
+        .onclick = () => {
+
+          const completedAssignments =
+            assignments.filter(
+              a => a.completed
+            );
+
+
+          if (!completedAssignments.length) {
+
+            alert(
+              "There are no completed assignments."
+            );
+
+            return;
+
+          }
+
+
+          if (
+            confirm(
+              "Delete all completed assignments?"
+            )
+          ) {
+
+            assignments =
+              assignments.filter(
+                a => !a.completed
+              );
+
+
+            saveAssignments();
+
+            renderAssignments();
+
+          }
+
+        };
+
+
+      /* ===================================================
+         FOCUS TIMER
+         =================================================== */
+
+      /*
+        Study Focus works as a stopwatch:
+        - Focus starts at 00:00:00 and counts upward.
+        - Stop/Pause leaves the exact time on screen.
+        - Break can be started at any moment.
+        - Break is a 5-minute countdown.
+        - When the break reaches 00:00, Focus automatically starts again.
+        - Exam Focus buttons jump here and start a fresh Focus session.
+      */
+
+      let focus = true;
+      let focusSeconds = 0;
+      let breakSeconds = 300;
+      let running = false;
+      let timer = null;
+      let currentExamFocusId = null;
+
+      function formatStopwatch(totalSeconds) {
+        const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+        const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+        const seconds = String(totalSeconds % 60).padStart(2, "0");
+        return `${hours}:${minutes}:${seconds}`;
+      }
+
+      function formatCountdown(totalSeconds) {
+        const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+        const seconds = String(totalSeconds % 60).padStart(2, "0");
+        return `${minutes}:${seconds}`;
+      }
+
+      function updateTimer() {
+        if (focus) {
+          $("#timerDisplay").textContent = formatStopwatch(focusSeconds);
+          $("#timerMode").textContent = "Focus Session";
+          $("#timerModeBtn").textContent = "☕ Take Break";
+        } else {
+          $("#timerDisplay").textContent = formatCountdown(breakSeconds);
+          $("#timerMode").textContent = "Break";
+          $("#timerModeBtn").textContent = "🎯 Focus Now";
+        }
+
+        document.querySelector("#focus")?.classList.toggle("focus-active", running && focus);
+        document.querySelector("#focus")?.classList.toggle("break-active", running && !focus);
+      }
+
+      function updateTimerButton() {
+        $("#timerStart").textContent = running
+          ? "⏸ Pause"
+          : (focus ? "▶ Start Focus" : "▶ Start Break");
+      }
+
+      function clearFocusTimer() {
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+        running = false;
+      }
+
+      function resetTimer() {
+        clearFocusTimer();
+        focus = true;
+        focusSeconds = 0;
+        breakSeconds = 300;
+        currentExamFocusId = null;
+        $("#timerAssignment").style.display = "none";
+        $("#timerAssignment").textContent = "";
+        updateTimerButton();
+        updateTimer();
+      }
+
+      const FOCUS_STATS_KEY = "campusBoardFocusStatsV1";
+
+      let focusStats = JSON.parse(
+        localStorage.getItem(FOCUS_STATS_KEY) || '{"used":0,"completed":0}'
+      );
+
+      function saveFocusStats() {
+        localStorage.setItem(FOCUS_STATS_KEY, JSON.stringify(focusStats));
+        $("#focusSessionsUsed").textContent = focusStats.used || 0;
+        $("#focusSessionsCompleted").textContent = focusStats.completed || 0;
+      }
+
+      function completeFocusSession() {
+        focusStats.completed = (focusStats.completed || 0) + 1;
+        saveFocusStats();
+
+        if (selectedAssignmentId) {
+          const assignment = assignments.find(a => a.id === selectedAssignmentId);
+          if (assignment && !assignment.completed) {
+            const shouldComplete = confirm(
+              `🎉 Focus session stopped!\n\nMark "${assignment.title}" as completed?`
+            );
+            if (shouldComplete) {
+              assignment.completed = true;
+              assignment.completedAt = Date.now();
+              saveAssignments();
+              selectedAssignmentId = null;
+              localStorage.removeItem("campusBoardSelectedAssignment");
+              $("#timerAssignment").style.display = "none";
+              renderAssignments();
+            }
+          }
+        }
+      }
+
+      function startFocus(reset = false) {
+        clearFocusTimer();
+        focus = true;
+        if (reset) focusSeconds = 0;
+        breakSeconds = 300;
+        running = true;
+
+        focusStats.used = (focusStats.used || 0) + 1;
+        saveFocusStats();
+        updateTimerButton();
+        updateTimer();
+
+        timer = setInterval(() => {
+          if (!running) return;
+          focusSeconds++;
+          updateTimer();
+        }, 1000);
+      }
+
+      function startBreak() {
+        clearFocusTimer();
+        focus = false;
+        breakSeconds = 300;
+        running = true;
+        updateTimerButton();
+        updateTimer();
+
+        timer = setInterval(() => {
+          if (!running) return;
+
+          breakSeconds--;
+          updateTimer();
+
+          if (breakSeconds <= 0) {
+            clearFocusTimer();
+            alert("☀️ Break over! Focus is starting automatically.");
+            startFocus(true);
+          }
+        }, 1000);
+      }
+
+      function pauseTimer() {
+        clearFocusTimer();
+        updateTimerButton();
+        updateTimer();
+      }
+
+      function toggleTimer() {
+        if (running) {
+          pauseTimer();
+          return;
+        }
+
+        if (focus) {
+          /* If Focus was paused, continue from the same elapsed time. */
+          running = true;
+          focusStats.used = (focusStats.used || 0) + 1;
+          saveFocusStats();
+          updateTimerButton();
+          timer = setInterval(() => {
+            if (!running) return;
+            focusSeconds++;
+            updateTimer();
+          }, 1000);
+        } else {
+          running = true;
+          updateTimerButton();
+          timer = setInterval(() => {
+            if (!running) return;
+            breakSeconds--;
+            updateTimer();
+            if (breakSeconds <= 0) {
+              clearFocusTimer();
+              alert("☀️ Break over! Focus is starting automatically.");
+              startFocus(true);
+            }
+          }, 1000);
+        }
+      }
+
+      function startExamFocus(exam) {
+        currentExamFocusId = exam.id;
+        clearFocusTimer();
+        focus = true;
+        focusSeconds = 0;
+        breakSeconds = 300;
+
+        $("#timerAssignment").textContent = `🎯 Exam Focus — ${exam.title}`;
+        $("#timerAssignment").style.display = "inline-flex";
+
+        document.getElementById("focus").scrollIntoView({ behavior: "smooth", block: "start" });
+        startFocus(false);
+      }
+
+      $("#timerStart").onclick = toggleTimer;
+
+      $("#timerReset").onclick = () => {
+        resetTimer();
+      };
+
+      $("#timerModeBtn").onclick = () => {
+        if (focus) {
+          startBreak();
+        } else {
+          startFocus(true);
+        }
+      };
+
+      /* ===================================================
+         RESOURCES SYSTEM
+         =================================================== */
+
+      const RESOURCE_KEY = "campusBoardResourcesV1";
+      let resources = JSON.parse(localStorage.getItem(RESOURCE_KEY) || "[]");
+
+      function saveResources() {
+        localStorage.setItem(RESOURCE_KEY, JSON.stringify(resources));
+      }
+
+      function renderResources() {
+        const list = $("#resourceList");
+        list.innerHTML = "";
+        if (!resources.length) {
+          list.innerHTML = '<div class="empty">🔗 No resources saved yet.</div>';
+          return;
+        }
+        resources.forEach(resource => {
+          const el = document.createElement("div");
+          el.className = "resource-item";
+          el.innerHTML = `
+            <div class="resource-icon">🔗</div>
+            <div>
+              <div class="resource-label">${esc(resource.label)}</div>
+              <a class="resource-link" href="${esc(resource.url)}" target="_blank" rel="noopener noreferrer">Open resource →</a>
+            </div>
+            <div class="task-actions">
+              <button class="icon-btn small edit-resource" title="Edit resource">✏️</button>
+              <button class="icon-btn small del-resource" title="Delete resource">×</button>
+            </div>`;
+
+          el.querySelector(".del-resource").onclick = () => {
+            resources = resources.filter(x => x.id !== resource.id);
+            saveResources();
+            renderResources();
+          };
+          el.querySelector(".edit-resource").onclick = () => {
+            const label = prompt("Edit resource label:", resource.label);
+            if (label !== null && label.trim()) {
+              resource.label = label.trim();
+              saveResources();
+              renderResources();
+            }
+          };
+          list.appendChild(el);
+        });
+      }
+
+      function addResource() {
+        const label = $("#resourceLabel").value.trim();
+        const url = $("#resourceUrl").value.trim();
+        if (!label) { alert("Please add a label 🏷️"); $("#resourceLabel").focus(); return; }
+        if (!url) { alert("Please paste the resource link 🔗"); $("#resourceUrl").focus(); return; }
+        try { new URL(url); } catch { alert("Please enter a valid link."); $("#resourceUrl").focus(); return; }
+        resources.unshift({id:uid(), label, url, created:Date.now()});
+        saveResources();
+        $("#resourceLabel").value = "";
+        $("#resourceUrl").value = "";
+        renderResources();
+        $("#resourceLabel").focus();
+      }
+
+      $("#resourceAddBtn").onclick = addResource;
+      ["#resourceLabel","#resourceUrl"].forEach(selector => {
+        $(selector).addEventListener("keydown", e => { if (e.key === "Enter") addResource(); });
+      });
+
+      /* ===================================================
+         EXAM CALENDAR SYSTEM
+         =================================================== */
+
+      const EXAM_KEY = "campusBoardExamsV1";
+
+      let exams = JSON.parse(
+        localStorage.getItem(EXAM_KEY) || "[]"
+      );
+
+      let examCalendarDate = new Date();
+
+      function saveExams() {
+        localStorage.setItem(
+          EXAM_KEY,
+          JSON.stringify(exams)
+        );
+      }
+
+      function formatExamTime(time) {
+        if (!time) return "Time not set";
+
+        const [hour, minute] = time.split(":").map(Number);
+        const d = new Date();
+        d.setHours(hour, minute, 0, 0);
+
+        return d.toLocaleTimeString(
+          undefined,
+          {
+            hour: "numeric",
+            minute: "2-digit"
+          }
+        );
+      }
+
+      function renderExamCalendar() {
+        const y = examCalendarDate.getFullYear();
+        const m = examCalendarDate.getMonth();
+
+        $("#examMonthTitle").textContent =
+          examCalendarDate.toLocaleDateString(
+            undefined,
+            {
+              month: "long",
+              year: "numeric"
+            }
+          );
+
+        const calendar = $("#examCalendar");
+        calendar.innerHTML = "";
+
+        const first = new Date(y, m, 1).getDay();
+        const days = new Date(y, m + 1, 0).getDate();
+
+        for (let i = 0; i < first; i++) {
+          const blank = document.createElement("div");
+          blank.className = "exam-day";
+          blank.style.visibility = "hidden";
+          calendar.appendChild(blank);
+        }
+
+        for (let d = 1; d <= days; d++) {
+          const date =
+            `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+
+          const el = document.createElement("div");
+          el.className = "exam-day";
+
+          if (date === todayStr()) {
+            el.classList.add("today");
+          }
+
+          const dayExams = exams.filter(
+            exam => exam.date === date
+          );
+
+          if (dayExams.length) {
+            el.classList.add("has-exam");
+          }
+
+          let content = `<strong>${d}</strong>`;
+
+          dayExams.slice(0, 2).forEach(exam => {
+            content += `
+              <span class="exam-dot">
+                🧪 ${esc(exam.subject)}
+              </span>
+            `;
+          });
+
+          if (dayExams.length > 2) {
+            content += `
+              <span class="badge" style="display:block;margin-top:3px;">
+                +${dayExams.length - 2} more
+              </span>
+            `;
+          }
+
+          el.innerHTML = content;
+
+          el.title = dayExams.length
+            ? dayExams
+                .map(
+                  exam =>
+                    `${exam.subject} — ${exam.title}${exam.time ? ` at ${formatExamTime(exam.time)}` : ""}`
+                )
+                .join(" • ")
+            : "";
+
+          calendar.appendChild(el);
+        }
+      }
+
+      function renderExamList() {
+        const list = $("#examList");
+        list.innerHTML = "";
+
+        const sorted = [...exams].sort(
+          (a, b) =>
+            `${a.date} ${a.time || "99:99"}`
+              .localeCompare(
+                `${b.date} ${b.time || "99:99"}`
+              )
+        );
+
+        if (!sorted.length) {
+          list.innerHTML =
+            '<div class="empty">🧪 No exams added yet.</div>';
+          return;
+        }
+
+        sorted.forEach(exam => {
+          const el = document.createElement("div");
+          el.className = "exam-item";
+
+          el.innerHTML = `
+            <div class="exam-icon">🧪</div>
+
+            <div>
+              <div class="exam-title">
+                ${esc(exam.title)}
+              </div>
+
+              <div class="exam-subject">
+                ${esc(exam.subject)}
+              </div>
+
+              <div class="exam-meta">
+                <span class="badge">
+                  📅 ${formatDate(exam.date)}
+                </span>
+
+                <span class="badge">
+                  ⏰ ${exam.time ? formatExamTime(exam.time) : "Time not set"}
+                </span>
+              </div>
+            </div>
+
+            <div class="task-actions">
+              <button
+                class="btn small exam-focus-btn focus-exam"
+                title="Start Focus for this exam">
+                🎯 Focus
+              </button>
+
+              <button
+                class="icon-btn small edit-exam"
+                title="Edit exam">
+                ✏️
+              </button>
+
+              <button
+                class="icon-btn small del-exam"
+                title="Delete exam">
+                ×
+              </button>
+            </div>
+          `;
+
+          el.querySelector(".focus-exam").onclick = () => {
+            startExamFocus(exam);
+          };
+
+          el.querySelector(".del-exam").onclick = () => {
+            exams = exams.filter(
+              item => item.id !== exam.id
+            );
+
+            saveExams();
+            renderExamCalendar();
+            renderExamList();
+          };
+
+          el.querySelector(".edit-exam").onclick = () => {
+            const title = prompt(
+              "Edit exam name:",
+              exam.title
+            );
+
+            if (title !== null && title.trim()) {
+              exam.title = title.trim();
+              saveExams();
+              renderExamCalendar();
+              renderExamList();
+              renderTimetableList();
+              renderResources();
+              saveFocusStats();
+            }
+          };
+
+          list.appendChild(el);
+        });
+      }
+
+      function addExam() {
+        const title =
+          $("#examTitle").value.trim();
+
+        const subject = title;
+
+        const date =
+          $("#examDate").value;
+
+        const time =
+          $("#examTime").value;
+
+        if (!title) {
+          alert("Please enter the exam / subject 🧪");
+          $("#examTitle").focus();
+          return;
+        }
+
+        if (!date) {
+          alert("Please select the exam date 📅");
+          $("#examDate").focus();
+          return;
+        }
+
+        exams.push({
+          id: uid(),
+          subject,
+          title,
+          date,
+          time,
+          created: Date.now()
+        });
+
+        saveExams();
+
+        $("#examTitle").value = "";
+        $("#examDate").value = "";
+        $("#examTime").value = "";
+
+        examCalendarDate = new Date(
+          `${date}T00:00:00`
+        );
+
+        renderExamCalendar();
+        renderExamList();
+
+        $("#examTitle").focus();
+      }
+
+      $("#examAddBtn").onclick = addExam;
+
+      ["#examTitle", "#examDate", "#examTime"]
+        .forEach(selector => {
+          $(selector).addEventListener(
+            "keydown",
+            e => {
+              if (e.key === "Enter") {
+                addExam();
+              }
+            }
+          );
+        });
+
+      $("#prevExamMonth").onclick = () => {
+        examCalendarDate.setMonth(
+          examCalendarDate.getMonth() - 1
+        );
+        renderExamCalendar();
+      };
+
+      $("#nextExamMonth").onclick = () => {
+        examCalendarDate.setMonth(
+          examCalendarDate.getMonth() + 1
+        );
+        renderExamCalendar();
+      };
+
+
+      /* ===================================================
+         CALENDAR
+         =================================================== */
+
+      function renderCalendar() {
+
+        const y =
+          calendarDate.getFullYear();
+
+        const m =
+          calendarDate.getMonth();
+
+
+        $("#monthTitle")
+          .textContent =
+          calendarDate.toLocaleDateString(
+            undefined,
+            {
+              month: "long",
+              year: "numeric"
+            }
+          );
+
+
+        const calendar =
+          $("#calendar");
+
+
+        calendar.innerHTML =
+          "";
+
+
+        const first =
+          new Date(
+            y,
+            m,
+            1
+          ).getDay();
+
+
+        const days =
+          new Date(
+            y,
+            m + 1,
+            0
+          ).getDate();
+
+
+        for (
+          let i = 0;
+          i < first;
+          i++
+        ) {
+
+          calendar.appendChild(
+            document.createElement("div")
+          );
+
+        }
+
+
+        for (
+          let d = 1;
+          d <= days;
+          d++
+        ) {
+
+          const date =
+            `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+
+
+          const el =
+            document.createElement("div");
+
+
+          el.className =
+            "day";
+
+
+          if (
+            date === todayStr()
+          ) {
+
+            el.classList.add(
+              "today"
+            );
+
+          }
+
+
+          const taskCount =
+            tasks.filter(
+              t =>
+                t.dueDate ===
+                date
+            ).length;
+
+
+          const assignmentCount =
+            assignments.filter(
+              a =>
+                a.dueDate ===
+                date
+            ).length;
+
+
+          if (taskCount)
+            el.classList.add(
+              "has-tasks"
+            );
+
+
+          if (assignmentCount)
+            el.classList.add(
+              "has-assignments"
+            );
+
+
+          let content =
+            `<strong>${d}</strong>`;
+
+
+          if (taskCount) {
+
+            content +=
+              `📝 ${taskCount}`;
+
+          }
+
+
+          if (assignmentCount) {
+
+            content +=
+              `<br>📚 ${assignmentCount}`;
+
+          }
+
+
+          el.innerHTML =
+            content;
+
+
+          const tooltipParts =
+            [];
+
+
+          if (taskCount) {
+
+            tooltipParts.push(
+              `${taskCount} task(s)`
+            );
+
+          }
+
+
+          if (assignmentCount) {
+
+            tooltipParts.push(
+              `${assignmentCount} assignment(s)`
+            );
+
+          }
+
+
+          el.title =
+            tooltipParts.join(
+              " • "
+            );
+
+
+          calendar.appendChild(el);
+
+        }
+
+      }
+
+
+      $("#prevMonth")
+        .onclick = () => {
+
+          calendarDate.setMonth(
+            calendarDate.getMonth() - 1
+          );
+
+          renderCalendar();
+
+        };
+
+
+      $("#nextMonth")
+        .onclick = () => {
+
+          calendarDate.setMonth(
+            calendarDate.getMonth() + 1
+          );
+
+          renderCalendar();
+
+        };
+
+
+      /* ===================================================
+         EXPORT / IMPORT
+         =================================================== */
+
+      $("#exportBtn")
+        .onclick = () => {
+
+          const data = {
+            tasks,
+            assignments,
+            exams,
+            timetable,
+            resources
+          };
+
+
+          const blob =
+            new Blob(
+              [
+                JSON.stringify(
+                  data,
+                  null,
+                  2
+                )
+              ],
+              {
+                type:
+                  "application/json"
+              }
+            );
+
+
+          const a =
+            document.createElement(
+              "a"
+            );
+
+
+          a.href =
+            URL.createObjectURL(
+              blob
+            );
+
+
+          a.download =
+            "campusboard-data.json";
+
+
+          a.click();
+
+
+          URL.revokeObjectURL(
+            a.href
+          );
+
+        };
+
+
+      $("#importBtn")
+        .onclick = () =>
+          $("#fileInput").click();
+
+
+      $("#fileInput")
+        .onchange = e => {
+
+          const file =
+            e.target.files[0];
+
+
+          if (!file)
+            return;
+
+
+          const reader =
+            new FileReader();
+
+
+          reader.onload = () => {
+
+            try {
+
+              const data =
+                JSON.parse(
+                  reader.result
+                );
+
+
+              /*
+                Supports both:
+                - New CampusBoard export
+                - Old task-only export
+              */
+
+              if (
+                Array.isArray(data)
+              ) {
+
+                tasks = data;
+
+              }
+
+              else if (
+                data &&
+                Array.isArray(data.tasks)
+              ) {
+
+                tasks =
+                  data.tasks;
+
+
+                if (
+                  Array.isArray(
+                    data.assignments
+                  )
+                ) {
+
+                  assignments =
+                    data.assignments;
+
+                  saveAssignments();
+
+                }
+
+                if (Array.isArray(data.exams)) {
+                  exams = data.exams;
+                  saveExams();
+                }
+
+                if (Array.isArray(data.timetable)) {
+                  timetable = data.timetable;
+                  saveTimetable();
+                }
+
+                if (Array.isArray(data.resources)) {
+                  resources = data.resources;
+                  saveResources();
+                }
+
+              }
+
+              else {
+
+                throw new Error();
+
+              }
+
+
+              saveTasks();
+
+              renderTasks();
+
+              renderAssignments();
+
+              renderExamCalendar();
+
+              renderExamList();
+
+
+              alert(
+                "✅ CampusBoard data imported!"
+              );
+
+
+            }
+
+            catch {
+
+              alert(
+                "❌ Invalid CampusBoard JSON file."
+              );
+
+            }
+
+          };
+
+
+          reader.readAsText(file);
+
+          e.target.value =
+            "";
+
+        };
+
+
+      /* ===================================================
+         INITIAL LOAD
+         =================================================== */
+
+      updateTimer();
+
+      renderTasks();
+
+      renderAssignments();
+
+      renderExamCalendar();
+
+      renderExamList();
+      renderTimetableList();
+      renderResources();
+      saveFocusStats();
+      updateClock();
+      $("#dashboardClockDate").textContent = new Date().toLocaleDateString(undefined, {weekday:"long", day:"numeric", month:"long", year:"numeric"});
+
+
+      /*
+        Restore selected assignment
+        after refreshing the page.
+      */
+
+      if (selectedAssignmentId) {
+
+        const assignment =
+          assignments.find(
+            a =>
+              a.id ===
+              selectedAssignmentId
+          );
+
+
+        if (assignment && !assignment.completed) {
+
+          $("#timerAssignment")
+            .textContent =
+            `🎯 ${assignment.subject} — ${assignment.title}`;
+
+          $("#timerAssignment")
+            .style.display =
+            "inline-flex";
+
+        }
+
+      }
+
+    })();
+
+
+    /* =====================================================
+       LOAD SAVED USER
+       ===================================================== */
+
+    window.addEventListener(
+      "DOMContentLoaded",
+      () => {
+
+        const savedName =
+          localStorage.getItem(
+            "campusBoardName"
+          );
+
+
+        const setupDone =
+          localStorage.getItem(
+            "campusBoardSetupDone"
+          );
+
+
+        if (savedName && setupDone === "true") {
+            showReturningWelcome(savedName);
+            closeSetup();
+          } else {
+            setupOverlay.style.display = "flex";
+            setupOverlay.setAttribute("aria-hidden", "false");
+          }
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
