@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+service-account*.json
+firebase-adminsdk-*.json
+firebase-debug.log
+firestore-debug.log
+storage-debug.log
+database-debug.log
+.firebase/
+node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+venv/

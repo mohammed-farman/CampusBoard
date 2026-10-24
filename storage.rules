@@ -1,0 +1,65 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isClassMember(classId) {
+      return signedIn()
+        && (
+          firestore.exists(/databases/(default)/documents/classMembers/$(classId + '_' + request.auth.uid))
+          || firestore.exists(/databases/(default)/documents/teacherAssignments/$(classId + '_' + request.auth.uid))
+        );
+    }
+
+    function isConversationMember(conversationId) {
+      let conversationPath = /databases/(default)/documents/conversations/$(conversationId);
+      return signedIn()
+        && firestore.exists(conversationPath)
+        && (!('blocked' in firestore.get(conversationPath).data) || firestore.get(conversationPath).data.blocked != true)
+        && request.auth.uid in firestore.get(conversationPath).data.participantUids;
+    }
+
+    match /users/{userId}/profile/{fileName} {
+      allow get: if request.auth != null
+        && request.auth.uid == userId
+        && fileName in ['avatar', 'banner'];
+      allow list: if false;
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && fileName in ['avatar', 'banner']
+        && request.resource.size > 0
+        && request.resource.size <= 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp)');
+      allow delete: if request.auth != null
+        && request.auth.uid == userId
+        && fileName in ['avatar', 'banner'];
+    }
+
+    match /conversations/{conversationId}/{userId}/{fileName} {
+      allow get: if isConversationMember(conversationId);
+      allow list: if false;
+      allow create, update: if signedIn()
+        && request.auth.uid == userId
+        && isConversationMember(conversationId)
+        && request.resource.size > 0
+        && request.resource.size <= 15 * 1024 * 1024
+        && request.resource.contentType.matches('(image/(jpeg|png|webp)|application/pdf|audio/(webm|ogg|mpeg|mp4))');
+      allow delete: if signedIn() && request.auth.uid == userId;
+    }
+
+    match /resources/{classId}/{userId}/{fileName} {
+      allow get: if isClassMember(classId);
+      allow list: if false;
+      allow create, update: if signedIn()
+        && request.auth.uid == userId
+        && isClassMember(classId)
+        && request.resource.size > 0
+        && request.resource.size <= 25 * 1024 * 1024
+        && request.resource.contentType.matches('(application/(pdf|msword|vnd.openxmlformats-officedocument\\.(wordprocessingml\\.document|presentationml\\.presentation))|text/plain|image/(jpeg|png|webp)|audio/(mpeg|mp4|ogg|webm))');
+      allow delete: if signedIn() && request.auth.uid == userId && isClassMember(classId);
+    }
+  }
+}
